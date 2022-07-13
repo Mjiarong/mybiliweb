@@ -71,6 +71,9 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  /*
+    截取多余字符,超出的隐藏
+  */
 }
 .video-bottom {
   margin-top: 4px;
