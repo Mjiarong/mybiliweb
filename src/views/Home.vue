@@ -2,8 +2,8 @@
   <div class="home">
     <div class="top">
       <el-row :gutter="20">
-        <el-col :xs="24" :sm="8" :md="8" v-for="video in videos" :key="video.id">
-          <el-card class="video-card" @click.native="goVideo(video)">
+        <el-col :xs="24" :sm="4" :md="3" v-for="video in videos" :key="video.id">
+          <el-card class="video-card" @click.native="playVideo(video)">
             <img class="video-avatar" :src="video.avatar">
             <div>
               <div class="video-title">{{video.title}}</div>
@@ -16,7 +16,6 @@
       </el-row>
       <div class="block">
         <el-pagination
-          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :page-size="6"
           layout="prev, pager, next"
@@ -35,7 +34,7 @@ export default {
     return {
       videos: [],
       start: 0,
-      limit: 6,
+      limit: 8,
       total: 0,
     };
   },
@@ -50,7 +49,7 @@ export default {
         this.total = res.data.total;
       });
     },
-    goVideo(video) {
+    playVideo(video) {
       this.$router.push({ name: 'showVideo', params: { videoID: video.id } });
     },
   },
@@ -64,16 +63,15 @@ export default {
 
 <style>
 .video-avatar {
-  width: 100%;
+width: 178px;
+    height: 178px;
 }
 .video-title {
   margin: 4px 0px 4px 0px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  /*
-    截取多余字符,超出的隐藏
-  */
+  /*截取多余字符,超出的隐藏*/
 }
 .video-bottom {
   margin-top: 4px;

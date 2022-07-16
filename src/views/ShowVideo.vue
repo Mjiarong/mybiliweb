@@ -4,8 +4,8 @@
     <div class="video-header">
       <h2>{{video.title}}</h2>
       <div class="video-data">
-        {{ $moment(video.created_at).format("YYYY-MM-DD HH:mm")}}创建 ·
-        {{video.view}}观赏
+        {{ $moment.unix(video.created_at).format("YYYY-MM-DD HH:mm")}}创建 ·
+        {{video.view}}次观赏
       </div>
     </div>
     <video-player
@@ -43,6 +43,7 @@ export default {
     load() {
       API.getVideo(this.$route.params.videoID).then((res) => {
         this.video = res.data;
+				console.log(res.data.created_at)
         this.playerOptions.sources[0].src = res.data.url;
       });
     },
