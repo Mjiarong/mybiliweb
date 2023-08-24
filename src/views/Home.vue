@@ -1,86 +1,225 @@
 <template>
-  <div class="home">
-    <div class="top">
-      <el-row :gutter="20">
-        <el-col :xs="24" :sm="4" :md="3" v-for="video in videos" :key="video.id">
-          <el-card class="video-card" @click.native="playVideo(video)">
-            <img class="video-avatar" :src="video.avatar">
-            <div>
-              <div class="video-title">{{video.title}}</div>
-              <div class="video-bottom clearfix">
-                <span class="video-info">{{video.info.substring(0, 40)}}</span>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-      <div class="block">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :page-size="6"
-          layout="prev, pager, next"
-          :total="total">
-        </el-pagination>
-      </div>
-    </div>
-  </div>
+	<div class="home-container">
+		<el-row :gutter="20">
+			<el-col class="carousel-container" :span="10">
+				<el-carousel>
+					<el-carousel-item v-for="(item,index) in videos" v-if="index<4">
+						<img class="carousel-video-avatar" :src="item.avatar_url" @click="playVideo(item.id)">
+						<h3 class="small">{{ item.title }}</h3>
+					</el-carousel-item>
+				</el-carousel>
+			</el-col>
+			<el-col class="video-card-container" :span="14">
+				<videoBoxRight :videos="videos"></videoBoxRight>
+			</el-col>
+		</el-row>
+		<div class="feed-roll-btn">
+			<i class="el-icon-refresh-right"></i>
+			<div class="feed-roll-btn-text" @click="loadVideoList()">换一换</div>
+		</div>
+	</div>
+
+	<!-- 
+		<el-aside width="300">
+			<h1><i class="el-icon-top"></i>每日热门</h1>
+			<el-table :data="rankData" stripe style="width: 100%" @cell-click="cellHandleclick">
+				<el-table-column type="index" label="排名" width="80">
+				</el-table-column>
+				<el-table-column prop="title" label="视频" width="220">
+				</el-table-column>
+			</el-table>
+		</el-aside>
+-->
+
+
+
 </template>
 
 <script>
-import * as API from '../api/video/video.js';
-export default {
-  name: 'home',
-  data() {
-    return {
-      videos: [],
-      start: 0,
-      limit: 8,
-      total: 0,
-    };
-  },
-  methods: {
-    handleCurrentChange(val) {
-      this.start = this.limit * (val - 1); // val 页面
-      this.load();
-    },
-    load() {
-      API.getVideos(this.start, this.limit).then((res) => {
-        this.videos = res.data.items;
-        this.total = res.data.total;
-      });
-    },
-    playVideo(video) {
-      this.$router.push({ name: 'showVideo', params: { videoID: video.id } });
-    },
-  },
-  components: {
-  },
-  beforeMount() {
-    this.load();
-  },
-};
+	import * as API from '@/api/video/video.js';
+	import uplpadAPI from '@/api/rank/rank.js';
+	import videoBoxRight from '@/components/HomeVideoBoxRight.vue';
+
+
+	export default {
+		name: 'home',
+		data() {
+			return {
+				videos: [{
+					id: 0,
+					title: "",
+					info: "",
+					avatar_url: "",
+					video_url: "",
+					created_at: 0,
+					title: "",
+					user: {
+						id: 0,
+						user_name: "",
+						nickname: "",
+						status: "",
+						avatar: "",
+						created_at: 0,
+					},
+					view: 0,
+				}],
+				start: 0,
+				limit: 6,
+				total: 0,
+				rankData: [],
+			};
+		},
+
+		components: {
+			videoBoxRight
+		},
+
+		methods: {
+			async loadVideoList() {
+				try {
+					let {
+						data: res
+					} = await API.getVideos(this.start, this.limit)
+					if (res.code != 0) {
+						this.$message({
+							message: "获取视频列表失败",
+							type: "error",
+							showClose: true,
+						});
+					} else {
+						this.videos = res.data.items;
+						this.total = res.data.total;
+					}
+				} catch (err) {
+					this.$message({
+						message: "请求出错",
+						type: "error",
+						showClose: true,
+					});
+				}
+
+				/*
+								try {
+									let {
+										data: res
+									} = await uplpadAPI()
+									if (res.code != 0) {
+										this.$message({
+											message: "获取排行榜数据失败",
+											type: "error",
+											showClose: true,
+										});
+									} else {
+										this.rankData = res.data;
+									}
+								} catch (err) {
+									this.$message({
+										message: "获取排行榜数据请求出错",
+										type: "error",
+										showClose: true,
+									});
+								}
+								*/
+			},
+
+			playVideo(id) {
+				let routeData = this.$router.resolve({
+					name: "showVideo",
+					params: {
+						videoID: id
+					}
+				});
+				window.open(routeData.href, '_blank');
+			},
+			cellHandleclick(row, column, cell, event) {
+				this.playVideo(row.id);
+			},
+		},
+		created() {
+			this.loadVideoList();
+		},
+	};
 </script>
 
-<style>
-.video-avatar {
-width: 178px;
-    height: 178px;
-}
-.video-title {
-  margin: 4px 0px 4px 0px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  /*截取多余字符,超出的隐藏*/
-}
-.video-bottom {
-  margin-top: 4px;
-}
-.video-info {
-  color: #909399;
-}
-.video-card {
-  margin-bottom: 14px;
-  cursor: pointer;
-}
+<style scoped lang="scss">
+	.home-container {
+		position: relative;
+		min-width: var(--home-container-min-width);
+		padding-left: var(--home-container-padding);
+		padding-right: var(--home-container-padding);
+		font-family: PingFang SC,
+			HarmonyOS_Regular,
+			Helvetica Neue,
+			Microsoft YaHei,
+			sans-serif !important;
+	}
+
+	.carousel-container {
+		//min-width: 536px;
+	}
+
+	.el-carousel--horizontal {
+		//min-height: calc(516px/7*5);
+		//min-width: 516px;
+		aspect-ratio: 7/5;
+		height: 100%;
+		border-radius: 5px;
+	}
+
+	.el-carousel /deep/ .el-carousel__container {
+		height: 100%;
+		//min-height: calc(516px/7*5);
+	}
+
+	.el-carousel__item h3 {
+		color: white;
+		font-size: clamp(18px, calc(14px + 0.390625vw), 20px);
+		margin: 0;
+		align-items: center;
+		position: absolute;
+		bottom: 10%;
+		left: 5%;
+	}
+
+	.carousel-video-avatar {
+		width: 100%;
+		height: 100%;
+		background-size: cover;
+		z-index: -1;
+		background-attachment: fixed;
+		background-repeat: no-repeat;
+		cursor: pointer;
+	}
+
+	.video-card-container {
+		//min-width: 600px;
+	}
+
+
+	.feed-roll-btn-text {
+		width: 20px;
+		line-height: 23px;
+		//对文字对象宽度设置只能排下一个文字的宽度距离，
+		//使其文字自动换行，就形成了竖立排版需求。
+		font-weight: 500;
+		text-align: center;
+		margin: 0 auto
+	}
+
+
+	.feed-roll-btn:hover {
+		background-color: gainsboro;
+	}
+
+	.feed-roll-btn {
+		position: absolute;
+		right: calc(var(--home-container-padding) - 40px);
+		top: 0;
+		cursor: pointer;
+		width: 40px;
+		transform: translate(10px);
+		border: 2px solid #e3e5e7;
+		border-radius: 8px;
+		text-align: center;
+	}
 </style>

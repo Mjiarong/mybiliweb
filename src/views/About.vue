@@ -1,5 +1,6 @@
 <template>
-  <div class="about">
-    <h1>欢迎来到Mybili</h1>
-  </div>
+	<div class="about">
+		欢迎
+	</div>
+
 </template>

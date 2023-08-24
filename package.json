@@ -10,11 +10,13 @@
   "dependencies": {
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
-    "element-ui": "^2.4.5",
+    "cos-js-sdk-v5": "^1.4.17",
+    "element-ui": "^2.15.13",
     "moment": "^2.29.4",
+    "uuid": "^9.0.0",
     "video.js": "^7.19.2",
     "vue": "^2.6.14",
-    "vue-router": "^3.5.4",
+    "vue-router": "^3.0.7",
     "vue-video-player": "^5.0.2"
   },
   "devDependencies": {
@@ -27,6 +29,7 @@
     "eslint-plugin-vue": "^8.0.3",
     "node-sass": "^7.0.1",
     "sass-loader": "^13.0.2",
+    "svg-sprite-loader": "^6.0.11",
     "vue-cli-plugin-element": "~1.0.1",
     "vue-template-compiler": "^2.6.14"
   },
