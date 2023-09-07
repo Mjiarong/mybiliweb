@@ -21,7 +21,7 @@
 								</span>
 								<span class="playinfo-item">
 									<i class="el-icon-chat-dot-square"></i>
-									508
+									{{video.comments_num}}
 								</span>
 							</div>
 						</div>

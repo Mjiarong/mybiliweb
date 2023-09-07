@@ -16,10 +16,8 @@ Vue.use(Router);
 
 // 页面路由组件
 import Home from '@/views/Home.vue';
-import Login from '@/views/Login.vue';
 import About from '@/views/About.vue';
 import PostVideo from '@/views/PostVideo.vue';
-import Register from '@/views/Register.vue';
 import ShowVideo from '@/views/ShowVideo.vue';
 import Userinfo from '@/views/Userinfo.vue';
 import VideoUpload from '@/views/VideoUpload.vue';
@@ -60,16 +58,6 @@ const router = new Router({
 			path: '/about',
 			name: 'about',
 			component: About,
-		},
-		{
-			path: '/login',
-			name: 'login',
-			component: Login,
-		},
-		{
-			path: '/register',
-			name: 'register',
-			component: Register,
 		},
 		{
 			path: '/userinfo',

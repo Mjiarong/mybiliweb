@@ -12,7 +12,7 @@
 						</el-upload>
 						<el-progress :percentage="this.videoUploadPercentage"></el-progress>
 						<el-button style="margin-left: 10px;" size="small" type="success"
-							@click="handleVideoUpload">修改视频</el-button>
+							@click="handleVideoUpload">上传视频</el-button>
 					</el-form-item>
 
 					<el-form-item label="标题" prop="title">
@@ -32,7 +32,7 @@
 						</el-upload>
 						<el-progress :percentage="this.avatarUploadPercentage"></el-progress>
 						<el-button style="margin-left: 10px;" size="small" type="success"
-							@click="handleAvatarUpload">修改封面</el-button>
+							@click="handleAvatarUpload">上传封面</el-button>
 					</el-form-item>
 
 					<el-form-item>
@@ -50,7 +50,6 @@
 
 <script>
 	import * as API from '@/api/video/video.js';
-	import uplpadAPI from '@/api/upload/upload.js';
 	import cos from '@/api/upload/cos.js';
 	import {
 		createUid

@@ -180,12 +180,14 @@
 		border-radius: 6px;
 		background-color: #f6f7f8;
 		color: #61666d;
-		margin: auto;
 	}
 
 	.channel-btns {
 		width: 100%;
 		margin: 5px 0;
+		display:flex;
+		flex-direction:row;
+		justify-content:space-between;
 	}
 
 

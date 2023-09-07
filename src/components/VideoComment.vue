@@ -32,8 +32,8 @@
 				</div>
 			</div>
 
-			<div class="infinite-list-wrapper" v-if="allComments.items!=null" v-infinite-scroll="load" infinite-scroll-disabled="disabled"
-				style="overflow:auto">
+			<div class="infinite-list-wrapper" v-if="allComments.items!=null" v-infinite-scroll="load"
+				infinite-scroll-disabled="disabled" style="overflow:auto">
 				<div v-for="(item,index)  in allComments.items.slice(0, this.count * this.loadStep)" class="reply-item">
 					<div class="root-reply-container">
 						<div class="root-reply-avatar">
@@ -54,8 +54,9 @@
 								<el-button type="text" icon="el-icon-bottom" class="reply-btns"
 									:style="{color: item.disliked == true ? '#00aeec' : '#61666d'}"
 									@click="addDislikes(item.id,userInfo.id,index,-1)"></el-button>
-								<el-button type="text" class="reply-btns" @click="showReplyBox(item.id,item.nickname)">回复</el-button>
-								
+								<el-button type="text" class="reply-btns"
+									@click="showReplyBox(item.id,item.nickname);repUserFlag = false;">回复</el-button>
+
 								<el-dropdown trigger="click" @command="handleCommand" class="sub-reply-operation-warp">
 									<span class="el-dropdown-link">
 										<i class="el-icon-arrow-down el-icon--right"></i>
@@ -97,7 +98,7 @@
 										:style="{color: subRep.disliked == true ? '#00aeec' : '#61666d'}"
 										@click="addDislikes(subRep.id,userInfo.id,index,subIndex+(allComments.currentPage[index] - 1) * pagesize)"></el-button>
 									<el-button type="text" class="reply-btns"
-										@click="showReplyBox(item.id,subRep.nickname)">回复</el-button>
+										@click="showReplyBox(item.id,subRep.nickname);repUserFlag = true;">回复</el-button>
 
 									<el-dropdown trigger="click" @command="handleCommand" class="sub-reply-operation-warp">
 										<span class="el-dropdown-link">
@@ -177,6 +178,7 @@
 				regDialogVisible: false,
 				repTextVisible: false,
 				currentRepTextID: 0,
+				repUserFlag: false,
 				count: 0,
 				loading: false,
 				comment: {
@@ -334,7 +336,7 @@
 							showClose: true,
 						});
 					} else {
-						if (res.data.items!=null){
+						if (res.data.items != null) {
 							this.allComments.items = res.data.items;
 							this.allComments.currentPage = new Array(this.allComments.items.length).fill(1);
 							this.totalPages = this.allComments.items.length;
@@ -379,6 +381,7 @@
 							title: '评论成功',
 							type: 'success',
 						});
+						this.loadVideoComments();
 						this.rootTextarea = '';
 					}
 				} catch (err) {
@@ -404,7 +407,9 @@
 				this.comment.user_avatar_key = this.userInfo.avatar_key;
 				this.comment.video_id = Number(this.commentVideoID);
 				this.comment.parent_id = id;
-				this.comment.reply_user_name = this.placeholderText;
+				if (this.repUserFlag) {
+					this.comment.reply_user_name = this.placeholderText;
+				}
 				try {
 					let res = await postComment(this.comment)
 					if (res.data.code != 0) {
@@ -462,7 +467,7 @@
 				}
 				try {
 					let res = await addCommentDislikes(commentID, userID)
-					if (res.data.code != 0) {} else { //更新本地的点赞显示
+					if (res.data.code != 0) {} else { //更新本地的点赞数和图标颜色
 						if (subIndex < 0) { //根评论
 							this.allComments.items[rootIndex].disliked = !this.allComments.items[rootIndex].disliked;
 							this.allComments.items[rootIndex].disliked ? (this.allComments.items[rootIndex].dislikes += 1) :
@@ -471,14 +476,12 @@
 								this.allComments.items[rootIndex].liked = false;
 								this.allComments.items[rootIndex].likes -= 1
 							}
-						} else {
+						} else {//子评论
 							this.allComments.items[rootIndex].children[subIndex].disliked = !this.allComments.items[rootIndex]
 								.children[subIndex].disliked;
 							this.allComments.items[rootIndex].children[subIndex].disliked ? (this.allComments.items[rootIndex]
-									.children[subIndex].dislikes += 1,
-									this.allComments.items[rootIndex].children[subIndex].liked = false, this.allComments.items[rootIndex]
-									.children[subIndex].likes -= 1) :
-								(this.allComments.items[rootIndex].children[subIndex].dislikes -= 1);
+								.children[subIndex].dislikes += 1) : (this.allComments.items[rootIndex].children[subIndex]
+								.dislikes -= 1);
 							if (this.allComments.items[rootIndex].children[subIndex].liked) {
 								this.allComments.items[rootIndex].children[subIndex].liked = false;
 								this.allComments.items[rootIndex].children[subIndex].likes -= 1

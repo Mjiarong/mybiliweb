@@ -1,8 +1,101 @@
-version: '2'
-
+version: '3.8'
 services:
-  nginx:
-    image: ccr.ccs.tencentyun.com/project-mybili/mybili:v0.0.1
-    restart: always
+  mybili-vue:
+    image: registry.cn-guangzhou.aliyuncs.com/mjiarong/mybili-vue:v1
     ports:
       - 3001:80
+    networks:
+      - mybili-net
+    volumes:
+      - ../nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx/conf/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - mybili-vue-data:/var/log/nginx
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - SET_CONTAINER_TIMEZONE=true
+      - CONTAINER_TIMEZONE=Asia/Shanghai
+    depends_on:
+      - mybili-server
+
+  mybili-server:
+    image: registry.cn-guangzhou.aliyuncs.com/mjiarong/mybili:v1
+    ports:
+      - 3000:3000
+    volumes:
+      - mybili-server-data:/mybili
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - SET_CONTAINER_TIMEZONE=true
+      - CONTAINER_TIMEZONE=Asia/Shanghai
+    command: ./mybili_server
+    networks:
+      - mybili-net
+    depends_on:
+      mybili-sql:
+        condition: service_healthy
+      mybili-redis:
+        condition: service_healthy
+
+  mybili-sql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_DATABASE=mybili
+      - MYSQL_ROOT_PASSWORD=123456
+      - SET_CONTAINER_TIMEZONE=true
+      - CONTAINER_TIMEZONE=Asia/Shanghai
+    volumes:
+      - mybili-sql-data:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
+    command: [
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci',
+      '--default-time-zone=+8:00'
+    ]
+    networks:
+      - mybili-net
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - -h
+        - localhost
+        - -u
+        - root
+        - -p$$MYSQL_ROOT_PASSWORD
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  mybili-redis:
+    image: redis:7.0.12
+    restart: always
+    environment:
+      - requirepass=123456
+      - SET_CONTAINER_TIMEZONE=true
+      - CONTAINER_TIMEZONE=Asia/Shanghai
+    volumes:
+      - ../redis/redis.conf:/etc/redis/redis.conf:ro
+      - mybili-redis-data:/data
+      - /etc/localtime:/etc/localtime:ro
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      - mybili-net
+    ports:
+      - 6379:6379
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - --raw
+        - incr
+        - ping
+volumes:
+  mybili-vue-data:
+  mybili-server-data:
+  mybili-sql-data:
+  mybili-redis-data:
+networks:
+  mybili-net:

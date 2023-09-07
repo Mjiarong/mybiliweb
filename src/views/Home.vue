@@ -3,7 +3,7 @@
 		<el-row :gutter="20">
 			<el-col class="carousel-container" :span="10">
 				<el-carousel>
-					<el-carousel-item v-for="(item,index) in videos" v-if="index<4">
+					<el-carousel-item v-for="(item,index) in carouselData" v-if="index<4">
 						<img class="carousel-video-avatar" :src="item.avatar_url" @click="playVideo(item.id)">
 						<h3 class="small">{{ item.title }}</h3>
 					</el-carousel-item>
@@ -63,6 +63,7 @@
 					},
 					view: 0,
 				}],
+				carouselData: [], //存放走马灯数据
 				start: 0,
 				limit: 6,
 				total: 0,
@@ -89,6 +90,9 @@
 					} else {
 						this.videos = res.data.items;
 						this.total = res.data.total;
+						if (this.carouselData.length === 0) {//走马灯的数据加载一次即可，刷新无须修改
+							this.carouselData = res.data.items;
+						}
 					}
 				} catch (err) {
 					this.$message({

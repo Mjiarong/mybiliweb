@@ -87,7 +87,6 @@
 
 <script>
 	import * as API from '@/api/login/login.js';
-	import uplpadAPI from '@/api/upload/upload.js';
 	import {
 		mySetItem
 	} from '@/api/utils/watchStorage.js';
@@ -435,19 +434,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.loginbody {
-		min-width: 200px;
-		background-image: url("../assets/login.jpg");
-		background-size: 100% 100%;
-		background-position: center center;
-		overflow: auto;
-		background-repeat: no-repeat;
-		position: fixed;
-		line-height: 100%;
-	}
-
-
-
 	.logintext {
 		margin-bottom: 20px;
 		line-height: 50px;
@@ -462,11 +448,6 @@
 		margin: 0 20px;
 	}
 
-	.tool {
-		display: flex;
-		justify-content: space-between;
-		color: #606266;
-	}
 
 	.butt {
 		margin-top: 10px;
