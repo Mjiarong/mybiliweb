@@ -265,7 +265,6 @@
 
 			//删除视频评论
 			async handleDeleteReply(id) {
-				console.log(id)
 				try {
 					let {
 						data: res

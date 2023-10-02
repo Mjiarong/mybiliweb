@@ -18,13 +18,13 @@ module.exports = defineConfig({
 	devServer: { //通过devServer节点对webpack-dev-serve插件进行更多的配置
 		open: true, //初次打包完成后自动打开浏览器
 		host: 'localhost', //实时打包使用的主机
-		proxy: {
-			'^/api': {
-				target: 'http://localhost:3000',
-				ws: true,
-				changeOrigin: true,
+/* 		proxy: {
+			[process.env.VUE_APP_API_URL]: {
+				target: process.env.VUE_APP_BASE_API,
+				//ws: true,
+				changeOrigin: false,
 			},
-		},
+		}, */
 	},
 	configureWebpack: {
 		// webpack 相关的配置需要写到 configureWebpack 里，不能直接写在外面
@@ -33,7 +33,7 @@ module.exports = defineConfig({
 		],
 		resolve: {
 			alias: {
-				// 配置alias别名,配置@作为src根路径
+				// 配置alias别名,配置@作为src文件夹根路径
 				'@': resolve('src'),
 			},
 		},

@@ -106,7 +106,6 @@
 		},
 		methods: {
 			playVideo(id) {
-				console.log(typeof id);
 				let routeData = this.$router.resolve({
 					name: "showVideo",
 					params: {

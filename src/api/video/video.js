@@ -22,13 +22,13 @@ const updateVideo = (id, form) => axios.put(`/video/${id}`, form);
 const deleteVideo = id => axios.delete(`/video/${id}`);
 
 // 视频点赞
-const addVideoLikes = (videoID,userID) => axios.post(`video/likes/add`, {
+const addVideoLikes = (videoID,userID) => axios.post(`/video/likes/add`, {
 	video_id: videoID,
 	user_id: userID
 });
 
 // 查询用户是否已经对视频点赞、收藏等信息
-const playInfoQuery = (videoID,userID) => axios.get(`video/playinfo`, {
+const playInfoQuery = (videoID,userID) => axios.get(`/video/playinfo`, {
     params:{
         video_id: videoID,
         user_id: userID
