@@ -22,13 +22,7 @@
 </template>
 
 <script>
-	// import VideoUpload from '@/views/VideoUpload.vue';
-	// export default {
-	// 	name: 'PostVideo',
-	// 	components: {
-	// 		VideoUpload,
-	// 	},
-	// }
+
 </script>
 
 <style lang="scss">

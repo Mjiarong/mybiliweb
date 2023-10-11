@@ -24,7 +24,7 @@
 					<el-avatar :size="38" :src="userInfo.avatar" class="user-avatar"></el-avatar>
 				</div>
 				<div class="reply-box-warp">
-					<el-input type="textarea" :rows="2" placeholder="与其赞同别人的话语，不如自己畅所欲言。" v-model="rootTextarea">
+					<el-input type="textarea" :rows="2" placeholder="与其赞同别人的话语，不如自己畅所欲言。" v-model="rootTextarea" maxlength="300" show-word-limit>
 					</el-input>
 				</div>
 				<div class="reply-box-send">
@@ -129,7 +129,7 @@
 						</div>
 						<div class="reply-box-warp">
 							<el-input type="textarea" ref="replyBox" :rows="2" :placeholder="'回复 @'+placeholderText+':'"
-								v-model="subTextarea">
+								v-model="subTextarea" maxlength="300" show-word-limit>
 							</el-input>
 						</div>
 						<div class="reply-box-send">

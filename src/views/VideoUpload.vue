@@ -84,15 +84,43 @@
 				},
 				rules: {
 					title: [{
-						required: true,
-						message: "请输入视频标题",
-						trigger: "blur"
-					}, ],
-					avatar: [{
-						required: true,
-						message: "请上传你的头像",
-						trigger: "blur"
-					}, ],
+							required: true,
+							message: "请输入视频标题",
+							trigger: "blur"
+						},
+						{
+							min: 2,
+							message: "视频标题不能少于2个字符",
+							trigger: "blur"
+						},
+						{
+							max: 80,
+							message: "视频标题不能大于80个字符",
+							trigger: "blur"
+						},
+					],
+					avatar_key: [{
+							required: true,
+							message: "请上传你的视频封面",
+							trigger: "blur"
+						},
+						{
+							max: 80,
+							message: "封面链接过长,请检查",
+							trigger: "blur"
+						},
+					],
+					video_key: [{
+							required: true,
+							message: "请上传你的视频",
+							trigger: "blur"
+						},
+						{
+							max: 80,
+							message: "视频链接过长,请检查",
+							trigger: "blur"
+						},
+					],
 					url: [{
 						required: true,
 						message: "请上传视频",
@@ -104,13 +132,13 @@
 							trigger: "blur"
 						},
 						{
-							min: 4,
-							message: "视频描述不能少于4个字符",
+							min: 2,
+							message: "视频描述不能少于2个字符",
 							trigger: "blur"
 						},
 						{
-							max: 100,
-							message: "视频描述不能大于30个字符",
+							max: 1000,
+							message: "视频描述不能大于1000个字符",
 							trigger: "blur"
 						},
 					],
@@ -204,7 +232,7 @@
 					};
 				}
 			},
-			
+
 			async handleVideoUpload() {
 				if (this.form.video_key) { //要先删除旧视频再上传新的视频
 					var deleteResult = await this.deleteVideo(this.form.video_key);
@@ -213,7 +241,7 @@
 							message: deleteResult.err,
 							type: 'warning'
 						});
-					} 
+					}
 				}
 				// 可以同步拿到请求的返回值,这里举例说明,实际返回的数据格式可以自定义
 				var uploadResult = await this.videoUpload();
@@ -325,7 +353,7 @@
 							message: deleteAvatarResult.err,
 							type: 'warning'
 						});
-					} 
+					}
 				}
 				// 可以同步拿到请求的返回值,这里举例说明,实际返回的数据格式可以自定义
 				var uploadResult = await this.avatarUpload();
@@ -346,7 +374,7 @@
 			async onSubmit() {
 				const isReady = (this.form.avatar_key && this.form.video_key);
 				if (!isReady) {
-					this.$message.error('请先上传头像或视频文件到服务器！');
+					this.$message.error('请先上传封面或视频文件到服务器！');
 					return isReady
 				}
 				try {
