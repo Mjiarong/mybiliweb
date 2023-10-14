@@ -362,9 +362,9 @@
 				}
 				this.comment.content = this.rootTextarea;
 				this.comment.user_id = this.userInfo.id;
-				this.comment.user_name = this.userInfo.user_name;
-				this.comment.nickname = this.userInfo.nickname;
-				this.comment.user_avatar_key = this.userInfo.avatar_key;
+				//this.comment.user_name = this.userInfo.user_name;
+				//this.comment.nickname = this.userInfo.nickname;
+				//this.comment.user_avatar_key = this.userInfo.avatar_key;
 				this.comment.video_id = Number(this.commentVideoID);
 				this.comment.parent_id = 0;
 				this.comment.reply_user_name = '';
@@ -401,9 +401,9 @@
 				}
 				this.comment.content = this.subTextarea;
 				this.comment.user_id = this.userInfo.id;
-				this.comment.user_name = this.userInfo.user_name;
-				this.comment.nickname = this.userInfo.nickname;
-				this.comment.user_avatar_key = this.userInfo.avatar_key;
+				//this.comment.user_name = this.userInfo.user_name;
+				//this.comment.nickname = this.userInfo.nickname;
+				//this.comment.user_avatar_key = this.userInfo.avatar_key;
 				this.comment.video_id = Number(this.commentVideoID);
 				this.comment.parent_id = id;
 				if (this.repUserFlag) {
